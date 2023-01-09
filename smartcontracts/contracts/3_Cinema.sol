@@ -57,6 +57,12 @@ contract Cinema is Ownable {
 
     /// @notice Adds a new theatre to the system
     function addTheatre(string memory name, string memory location, uint price) external {
+        for(uint i = 0; i < Theatres.length; i++) {
+            if(keccak256(abi.encodePacked(Theatres[i].name)) == keccak256(abi.encodePacked(name)) 
+                && keccak256(abi.encodePacked(Theatres[i].location)) == keccak256(abi.encodePacked(location))) {
+                revert("A theatre with this name already exists at this location");
+            }
+        }
         Theatre storage newTheatre = Theatres.push();
         newTheatre.name = name;
         newTheatre.location = location;

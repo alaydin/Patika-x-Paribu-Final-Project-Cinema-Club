@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/contracts/1_ParibuNFT.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/contracts/1_ParibuNFT.sol": {
       "lastModificationDate": 1672878080672,
       "contentHash": "b014a942271481c052f0f3b4ae766d6a",
       "sourceName": "contracts/1_ParibuNFT.sol",
@@ -41,7 +41,7 @@
         "ParibuNFT"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
       "lastModificationDate": 1672662885872,
       "contentHash": "e436cea06129be2c73cda4b1acc848b5",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
@@ -78,7 +78,7 @@
         "Ownable"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/utils/Counters.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/utils/Counters.sol": {
       "lastModificationDate": 1672662885853,
       "contentHash": "74654e3ae5d7f39555055dfe244dab7a",
       "sourceName": "@openzeppelin/contracts/utils/Counters.sol",
@@ -113,7 +113,7 @@
         "Counters"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
       "lastModificationDate": 1672662885860,
       "contentHash": "190f627b9302b9602d3a313e28205cc5",
       "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721.sol",
@@ -156,7 +156,7 @@
         "ERC721"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol": {
       "lastModificationDate": 1672662885862,
       "contentHash": "8af32effd0536e2971ff8496812a5016",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
@@ -193,7 +193,7 @@
         "ERC721URIStorage"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/utils/Context.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/utils/Context.sol": {
       "lastModificationDate": 1672662885853,
       "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
@@ -228,7 +228,7 @@
         "Context"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/utils/Address.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/utils/Address.sol": {
       "lastModificationDate": 1672662885851,
       "contentHash": "f31ad6fc4bbf9c06203987220156a6ba",
       "sourceName": "@openzeppelin/contracts/utils/Address.sol",
@@ -263,7 +263,7 @@
         "Address"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
       "lastModificationDate": 1672662885874,
       "contentHash": "396031251978f8febfd90cb62cb240ec",
       "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
@@ -300,7 +300,7 @@
         "Strings"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
       "lastModificationDate": 1672662885857,
       "contentHash": "0e7db055ce108f9da7bb6686a00287c0",
       "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
@@ -337,7 +337,7 @@
         "ERC165"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
       "lastModificationDate": 1672662885870,
       "contentHash": "eb7e61db29f31d88b3c1cef1b063d338",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
@@ -374,7 +374,7 @@
         "IERC721"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
       "lastModificationDate": 1672662885870,
       "contentHash": "c22d4395e33763de693fd440c6fd10e1",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
@@ -409,7 +409,7 @@
         "IERC721Receiver"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
       "lastModificationDate": 1672662885870,
       "contentHash": "efbc0d15b80a74e34dbe8da0f3e879bb",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
@@ -446,7 +446,7 @@
         "IERC721Metadata"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/utils/math/Math.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/utils/math/Math.sol": {
       "lastModificationDate": 1672662885872,
       "contentHash": "b9c58920ce74d6dc819161786112e7ee",
       "sourceName": "@openzeppelin/contracts/utils/math/Math.sol",
@@ -481,7 +481,7 @@
         "Math"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
       "lastModificationDate": 1672662885867,
       "contentHash": "03e6768535ac4da0e9756f1d8a4a018a",
       "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
@@ -516,7 +516,7 @@
         "IERC165"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/contracts/4_User.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/contracts/4_User.sol": {
       "lastModificationDate": 1673213673728,
       "contentHash": "dc455ca0edb6224a77ec9530a7dd40a2",
       "sourceName": "contracts/4_User.sol",
@@ -555,7 +555,7 @@
         "User"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/contracts/2_CVGToken.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/contracts/2_CVGToken.sol": {
       "lastModificationDate": 1673013361521,
       "contentHash": "2396809743a62506534ee05370ae6460",
       "sourceName": "contracts/2_CVGToken.sol",
@@ -593,9 +593,9 @@
         "CVGToken"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/contracts/3_Cinema.sol": {
-      "lastModificationDate": 1673192561966,
-      "contentHash": "af42f1d5cc5fd1ba0de97a19e20e1427",
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/contracts/3_Cinema.sol": {
+      "lastModificationDate": 1673223524977,
+      "contentHash": "4d6817a3bb4e6f4280a113cc04649d84",
       "sourceName": "contracts/3_Cinema.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -631,7 +631,7 @@
         "Cinema"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
       "lastModificationDate": 1672662885858,
       "contentHash": "834a0dde221759af42b030253315b086",
       "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
@@ -670,7 +670,7 @@
         "ERC20"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol": {
       "lastModificationDate": 1672662885858,
       "contentHash": "a1c7f80ae26f5b2d7d563475627fbf25",
       "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
@@ -708,7 +708,7 @@
         "ERC20Burnable"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
       "lastModificationDate": 1672662885868,
       "contentHash": "ad7c2d0af148c8f9f097d65deeb4da6b",
       "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
@@ -743,7 +743,7 @@
         "IERC20"
       ]
     },
-    "/Users/burakalaydin/Desktop/Paribu-Final-Project/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+    "/Users/burakalaydin/Desktop/Patika-x-Paribu-Final-Project-Cinema-Club/smartcontracts/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
       "lastModificationDate": 1672662885869,
       "contentHash": "909ab67fc5c25033fe6cd364f8c056f9",
       "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
