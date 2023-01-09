@@ -16,10 +16,12 @@ contract ParibuNFT is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
+    mapping(address => bool) hasNFT;
+
     constructor() ERC721("ParibuNFT", "PAR") {}
 
     /// @notice Mints a new NFT to the given address
-    /// @dev
+    /// @dev A caller who has already minted an NFT should not be able to mint again
     /// @param recipient Will be the owner of freshly minted NFT
     /// @param tokenURI IPFS hashed CID
     /// @return ID of the minted NFT
@@ -27,6 +29,10 @@ contract ParibuNFT is ERC721URIStorage, Ownable {
         public
         returns (uint256)
     {
+        require(!_hasNFT(msg.sender), "You already have this NFT");
+
+        hasNFT[msg.sender] = true;
+
         _tokenIds.increment();
 
         uint256 newItemId = _tokenIds.current();
@@ -34,5 +40,9 @@ contract ParibuNFT is ERC721URIStorage, Ownable {
         _setTokenURI(newItemId, tokenURI);
 
         return newItemId;
+    }
+
+    function _hasNFT(address checkedAddress) public view returns (bool) {
+        return hasNFT[checkedAddress];
     }
 }
