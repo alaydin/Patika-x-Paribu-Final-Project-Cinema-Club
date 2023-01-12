@@ -29,14 +29,14 @@ contract ParibuNFT is ERC721URIStorage, Ownable {
         public
         returns (uint256)
     {
-        require(!_hasNFT(msg.sender), "You already have this NFT");
+        require(!_hasNFT(msg.sender), "You are already a member");
 
         hasNFT[msg.sender] = true;
 
         _tokenIds.increment();
 
         uint256 newItemId = _tokenIds.current();
-        _mint(recipient, newItemId);
+        _safeMint(recipient, newItemId);
         _setTokenURI(newItemId, tokenURI);
 
         return newItemId;

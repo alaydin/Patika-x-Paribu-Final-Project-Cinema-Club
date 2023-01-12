@@ -18,5 +18,10 @@
     "@alch/alchemy-web3": "^1.4.7",
     "@openzeppelin/contracts": "^4.8.0",
     "dotenv": "^16.0.3"
+  },
+  "browser": {
+    "fs": false,
+    "os": false,
+    "path": false
   }
 }
