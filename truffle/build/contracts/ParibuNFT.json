@@ -20995,12 +20995,12 @@
         }
       },
       "links": {},
-      "address": "0x10407ca1240E0395EF6B76bdCeE740E5b272F712",
-      "transactionHash": "0x628e61dd186b9ea60d9ab263d8de696863a2c7238004960516bcfcd81d88e42b"
+      "address": "0x804cd02504306e82429A94D0e3Eee8f72070e94F",
+      "transactionHash": "0x36c89c9627efa1c783f1f1b68c72d2d9ab9d354fcb3f6c43a51b1542bc633521"
     }
   },
   "schemaVersion": "3.4.11",
-  "updatedAt": "2023-01-11T22:30:11.105Z",
+  "updatedAt": "2023-01-12T21:50:13.395Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Burak Alaydın",

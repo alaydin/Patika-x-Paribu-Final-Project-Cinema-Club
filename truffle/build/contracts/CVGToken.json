@@ -15218,12 +15218,12 @@
         }
       },
       "links": {},
-      "address": "0xD7e24C9a22BF6133c80c12365CEF57eE34e34574",
-      "transactionHash": "0x0dbe2780f94037884eded4a3e699672d8998bb90b1c1ea8052348e91793ef9bb"
+      "address": "0x00158FBC616Acac6B5FDd935F7aBe07691B6a31c",
+      "transactionHash": "0xc8f2dbe1ccca3efbec85b70b63765470ca7225501097b7eb7fbad24d03da3c56"
     }
   },
   "schemaVersion": "3.4.11",
-  "updatedAt": "2023-01-11T22:30:11.111Z",
+  "updatedAt": "2023-01-12T21:50:13.410Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Burak Alaydın",

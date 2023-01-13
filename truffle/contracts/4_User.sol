@@ -190,11 +190,13 @@ contract User is Ownable {
 
         require(block.timestamp < lastPurchase + 30 days, "It's been more than 30 days since your last purchase");
         require(!user.hasSpentSinceLastPurchase, "You have spent some or all of your tokens after your last purchase");
-        require(inActiveAmount <= amount, "You cannot request to refund more than you have right to do");
+        require(inActiveAmount >= amount, "You cannot request to refund more than you have right to do");
 
-        user.lastPurchaseDate = 0;
         user.inActiveAmount -= amount;
         user.totalPurchase -= amount;
+        if(inActiveAmount <= 0) {
+            user.lastPurchaseDate = 0;
+        }
 
         bool sent = token.transferFrom(msg.sender, address(this), amount);
         require(sent, "CVG transfer for refund process had some issues");
