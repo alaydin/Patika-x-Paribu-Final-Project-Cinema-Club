@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react';
 import { Network, Alchemy } from "alchemy-sdk";
 import useConnection from "../Web3-hooks/useConnection";
 import useContract from "../Web3-hooks/useContract";
-import { TabList, Tab, Widget, Tag, Table, Form, Button, Information } from "@web3uikit/core";
-
+import { TabList, Tab, Widget, Tag, Table, Form, Button, Information, Notification, useNotification, Input, Select } from "@web3uikit/core";
+import Cinema from './Cinema';
 import d100 from "../assets/100_v6.png";
 import d200 from "../assets/200_v6.png";
 import d300 from "../assets/300_v6.png";
@@ -39,6 +39,8 @@ const alchemy = new Alchemy(settings);
 export default function Home() {
   const connection = useConnection();
 
+  // const dispatch = useNotification();
+
   // Initiate contracts
   const nftContract = useContract(NFT_CONTRACT_ADDRESS, nftABI);
   const tokenContract = useContract(TOKEN_CONTRACT_ADDRESS, tokenABI);
@@ -46,17 +48,40 @@ export default function Home() {
   const userContract = useContract(USER_CONTRACT_ADDRESS, userABI);
   const USDCContract = useContract(USDC_CONTRACT_ADDRESS, USDCABI);
 
-  // Declare state variables
+  // User state variables
   const [hasNFT, setHasNFT] = useState(false);
   const [userBalance, setUserBalance] = useState(0.00);
   const [userRank, setUserRank] = useState(null);
   const [seenMovieCount, setSeenMovieCount] = useState(0);
   const [refundableAmount, setRefundableAmount] = useState(0.00);
+  const [refundRequest, setRefundRequest] = useState(0);
+
+  // Notifications
+  // const handleNewTransaction = () => {
+  //   dispatch({
+  //     type: 'success',
+  //     message: 'Transaction sent',
+  //     title: 'New Notification',
+  //     icon,
+  //     position: position || 'topR',
+  //   });
+  // };
+  // const handleRejectedransaction = () => {
+  //   dispatch({
+  //     type: 'error',
+  //     message: 'Transaction rejected',
+  //     title: 'New Notification',
+  //     icon,
+  //     position: position || 'topR',
+  //   });
+  // };
+
 
   // Functions
   async function mintParibuNFT() {
     try {
       const id = await nftContract.mintNFT(connection.address, TOKEN_URI);
+      await getUser();
     }
     catch {
       console.log("Transaction not approved");
@@ -70,14 +95,15 @@ export default function Home() {
           const deposited = await userContract.mint10CVG();
           await deposited.wait();
           getUser();
+          // handleNewTransaction();
         },
         (reject) => {
-          alert("User rejected");
+          // handleRejectedransaction();
         }
       )
     }
     catch {
-      console.log("Transaction not approved");
+      // handleRejectedransaction();
     }
   }
   async function deposit20() {
@@ -85,50 +111,73 @@ export default function Home() {
       const approved = await USDCContract.approve(USER_CONTRACT_ADDRESS, 20 * 1e6).then(
         async (success) => {
           const deposited = await userContract.mint20CVG();
+          await deposited.wait();
+          getUser();
+          // handleNewTransaction();
         },
         (reject) => {
-          alert("User rejected");
+          // handleRejectedransaction();
         }
       )
     }
     catch {
-      console.log("Transaction not approved");
+      // handleRejectedransaction();
     }
-    getUser();
   }
   async function deposit30() {
     try {
       const approved = await USDCContract.approve(USER_CONTRACT_ADDRESS, 30 * 1e6).then(
         async (success) => {
           const deposited = await userContract.mint30CVG();
+          await deposited.wait();
+          getUser();
+          // handleNewTransaction();
         },
         (reject) => {
-          alert("User rejected");
+          // handleRejectedransaction();
         }
       )
     }
     catch {
-      console.log("Transaction not approved");
+      // handleRejectedransaction();
     }
-    getUser();
+  }
+
+  async function refund() {
+    try {
+      const approved = await tokenContract.approve(USER_CONTRACT_ADDRESS, refundRequest * 1e6).then(
+        async (success) => {
+          const refunded = await userContract.refund(refundRequest * 1e6);
+          await refunded.wait();
+          console.log(success);
+          getUser();
+        },
+        (reject) => {
+          alert(reject);
+        }
+      )
+    }
+    catch {
+      alert("Something went wrong for refund process");
+    }
   }
 
   async function getUser() {
     try {
       console.log("getting user information");
       const user = await userContract.getUser(connection.address);
-      setUserBalance(user.totalPurchase - user.totalSpent);
 
       setUserRank(user.userRank);
 
       setSeenMovieCount(user.seenMovieCount);
 
       setRefundableAmount(user.inActiveAmount);
+
+      setUserBalance(await tokenContract.balanceOf(connection.address));
     } catch {
       alert("Cannot get user information");
     }
   }
-
 
   useEffect(() => {
     async function checkNFT() {
@@ -138,60 +187,83 @@ export default function Home() {
       setHasNFT(nftGate);
     }
     if (connection.address) {
-      checkNFT();
-      getUser();
+      checkNFT().then(async (success) => {
+        await getUser();
+      },
+        (reject) => {
+          alert(reject);
+        })
     }
-  }, [connection.address, hasNFT])
+  }, [connection.address, hasNFT]);
+
+  // useEffect(() => {
+  //   async function getCinemas() {
+  //     console.log(cinemaContract);
+  //     const tempCinemas = await cinemaContract.getTheatres();
+  //     console.log(tempCinemas);
+  //   }
+  //   getCinemas();
+  // }, [])
 
   return (
     <>
-      <div>
+      <div style={{ marginTop: '15px', marginBottom: '15px' }}>
         <Button id='connectButton' text={(connection.address === undefined || connection.address === "") ? "Connect Wallet" : `${connection.address.slice(0, 5)}...${connection.address.slice(-4)}`} theme="colored" color="blue" onClick={connection.connect}></Button>
       </div>
-      <div>
+      <div style={{ justifyItems: 'center' }}>
         <TabList defaultActiveKey={1} tabStyle="bulbUnion">
           <Tab tabKey={1} tabName="User">
             <div className='tabContent'>
-              <div>
-                Become a Member and start earning
-                {!hasNFT && (
+              {!hasNFT && (
+                <div>
+                  <h2>Become a Member and start earning</h2>
                   <Button text={(connection.address) ? "Mint Paribu NFT to become member!" : "Connect yout wallet first!"}
                     disabled={hasNFT}
                     onClick={() => mintParibuNFT()}
                     theme='moneyPrimary'
                   />
-                )}
-              </div>
-              {hasNFT && // Change it to "hasNFT"
+                </div>
+              )}
+              {hasNFT &&
                 <div>
-                  <section style={{ display: 'flex', gap: '10px', padding: '20px 20px 20px 0px' }}>
-                    <Widget info={userBalance.toString()} title="CVG Balance" />
+                  <h2>Your Stats</h2>
+                  <section style={{ display: 'flex', gap: '10px', padding: '10px 10px 10px 0px' }}>
+                    <Widget info={(userBalance / 1e6).toString()} title="CVG Balance" />
                     <Widget info={seenMovieCount.toString()} title="Seen Movie Count" />
                     <Widget info={(userRank == 0) ? "Novice" : (userRank == 1) ? "Casual" : (userRank == 2) ? "Movie Expert" : ""} title="User Rank" />
-                    <Widget info={refundableAmount.toString()} title="Refundable Amount" />
                   </section>
                 </div>
               }
-              <div>
-                <h2>Get CVG Tokens and enjoy discounts</h2>
-                <div style={{ display: 'inline-block' }}>
+              <div style={{}}>
+                <h2 style={{ alignSelf: 'center' }}>Get CVG Tokens and enjoy discounts</h2>
+                {/* <img src={d100}></img> */}
+                <div style={{ display: 'inline-block', padding: '5px 5px 5px 0px' }}>
                   <Button
                     disabled={!hasNFT}
-                    text={"Deposit 10 USDC for 10 CVG Token"}
+                    text={"Purchase 10 CVG Token"}
+                    size="regular"
+                    isFullWidth={false}
+                    theme={'moneyPrimary'}
                     onClick={() => deposit10()}
                   />
                 </div>
-                <div style={{ display: 'inline-block' }}>
+                <div style={{ display: 'inline-block', padding: '5px 5px 5px 0px' }}>
                   <Button
                     disabled={!hasNFT}
-                    text={"Deposit 20 USDC for 20 CVG Token"}
+                    text={"Purchase 20 CVG Token"}
+                    size="regular"
+                    isFullWidth={false}
+                    theme={'moneyPrimary'}
                     onClick={() => deposit20()}
                   />
                 </div>
-                <div style={{ display: 'inline-block', gap: '200px' }}>
+                <div style={{ display: 'inline-block', padding: '5px 5px 5px 0px' }}>
                   <Button
                     disabled={!hasNFT}
-                    text={"Deposit 30 USDC for 30 CVG Token"}
+                    text={"Purchase 30 CVG Token"}
+                    size="regular"
+                    isFullWidth={false}
+                    theme={'moneyPrimary'}
                     onClick={() => deposit30()}
                   />
                 </div>
@@ -199,14 +271,27 @@ export default function Home() {
               {hasNFT && // Change it to "hasNFT"
                 <div>
                   <h2 style={{ alignSelf: 'center' }}>Refund your purchases</h2>
-                  <Widget info={`${refundableAmount.toString()} Tokens`} title='Refund'>
-                    <Button id='refundButton' text='Refund' onClick={() => { }}></Button>
+                  <Widget info={`${(refundableAmount / 1e6).toString()} Tokens`} title='Refund' style={{ display: 'inline-block' }} >
+                    {/* <div style={{ display: 'inline-grid' }}> */}
+                    <Input
+                      label="Amount"
+                      type="number"
+                      validation={{
+                        max: refundableAmount,
+                        min: 0
+                      }}
+                      onChange={(e) => setRefundRequest(e.target.value)}
+                      style={{ marginTop: '15px', marginBottom: '15px', minBlockSize: '30px', borderRadius: '10px' }}
+                    />
+                    <Button text='Refund' theme='colored' color='red' onClick={() => refund()}></Button>
                   </Widget>
                 </div>
               }
             </div>
           </Tab>
-          <Tab tabKey={2} tabName="Cinemas"></Tab>
+          <Tab tabKey={2} tabName="Cinemas">
+            {/* <Cinema></Cinema> */}
+          </Tab>
           <Tab tabKey={3} tabName="Management"></Tab>
         </TabList>
       </div>
