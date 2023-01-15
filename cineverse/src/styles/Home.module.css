@@ -1,0 +1,20 @@
+.customButton {
+  /*background-image: url("../../assets/100_v6.png");*/
+  background-size: cover;
+  background-position: center;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+}
+
+.customButton:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.container {
+  width: 50%; /* or any width */
+  margin: 0 auto;
+}

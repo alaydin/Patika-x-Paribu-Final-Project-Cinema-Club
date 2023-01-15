@@ -1,0 +1,13 @@
+/* styles.css */
+body {
+  /* background-image: url("../../assets/cinema.jpeg"); */
+  background-size: cover;
+  background-position: top;
+
+  color: turquoise;
+}
+
+h2 {
+  color: cornflowerblue;
+  font-family: "Gill Sans", sans-serif;
+}
