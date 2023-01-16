@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
 export const MyContext = React.createContext();
 import "../styles/globals.css";
 
@@ -29,6 +30,8 @@ const USDCABI = fiatJSON.abi; // Truffle env, comment when devnet
 
 export default function App({ Component, pageProps }) {
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const connection = useConnection();
 
   const nftContract = useContract(NFT_CONTRACT_ADDRESS, nftABI);
@@ -36,6 +39,13 @@ export default function App({ Component, pageProps }) {
   const cinemaContract = useContract(CINEMA_CONTRACT_ADDRESS, cinemaABI);
   const userContract = useContract(USER_CONTRACT_ADDRESS, userABI);
   const USDCContract = useContract(USDC_CONTRACT_ADDRESS, USDCABI);
+
+
+  useEffect(() => {
+    if (nftContract && tokenContract && cinemaContract && userContract && USDCContract) {
+      setIsLoading(false);
+    }
+  }, [nftContract, tokenContract, cinemaContract, userContract, USDCContract])
 
   return (
     <NotificationProvider>
@@ -48,9 +58,12 @@ export default function App({ Component, pageProps }) {
             color="blue"
             onClick={connection.connect}></Button>
         </div>
-        <Component {...pageProps} />
+        {isLoading ?
+          <div>Loading contracts</div>
+          :
+          <Component {...pageProps} />
+        }
       </MyContext.Provider>
     </NotificationProvider>
   )
 }
-

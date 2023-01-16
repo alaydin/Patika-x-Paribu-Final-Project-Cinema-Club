@@ -1,0 +1,39 @@
+.container {
+    display: flex;
+    /* Enable flexbox layout */
+    flex-wrap: wrap;
+    /* Allow items to wrap to next line */
+    justify-content: center;
+    /* Center items horizontally */
+    align-items: center;
+    /* Center items vertically */
+    align-content: space-between;
+    /* Add space between items */
+}
+
+.box {
+    background-color: transparent;
+    border: 2px solid lightblue;
+    border-radius: 5px;
+    padding: 10px;
+    min-width: 200px;
+    min-height: 150px;
+    flex: 1;
+    margin: 10px;
+    text-align: center;
+}
+
+
+.name {
+    font-size: 22px;
+    /* Increase font size */
+    font-weight: bold;
+    /* Make text bold */
+}
+
+.location {
+    font-size: 18px;
+    /* Decrease font size */
+    color: lightgray;
+    /* Make text lighter */
+}
