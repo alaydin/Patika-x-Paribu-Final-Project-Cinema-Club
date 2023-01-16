@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "./2_CVGToken.sol";
+import "./4_User.sol";
 
 /// @title An implementation of managing movie theatres on blockchain
 /// @author Burak Alaydın
@@ -11,11 +12,24 @@ import "./2_CVGToken.sol";
 /// @custom:disclaimer This contract is made for learning purposes
 contract Cinema is Ownable {
     CVGToken private token;
+    User private userContract;
 
     uint private ETHBalance;
 
+    uint discountPercentage = 3;
+
     constructor(address _token) Ownable() {
         token = CVGToken(_token);
+    }
+
+    /// @dev The following set method(s) can be used in case the dependent contract address changes
+    function setToken(address _token) public onlyOwner {
+        token = CVGToken(_token);
+    }
+
+    /// @dev Make sure you set User contract address to unlock ticket buying/selling for both this and User contract
+    function setUserContract(address payable _userContract) public onlyOwner {
+        userContract = User(_userContract);
     }
 
     struct Theatre {
@@ -55,6 +69,14 @@ contract Cinema is Ownable {
         return Theatres[theatreId].movieSaloons;
     }
 
+    function getDiscountPercentage() public view returns (uint) {
+        return discountPercentage;
+    }
+
+    function setDiscountPercentage(uint amount) public onlyOwner {
+        discountPercentage = amount;
+    }
+
     /// @notice Adds a new theatre to the system
     function addTheatre(string memory name, string memory location, uint price) external {
         for(uint i = 0; i < Theatres.length; i++) {
@@ -72,7 +94,7 @@ contract Cinema is Ownable {
 
     /// @notice removes the theatre with the given ID from the system
     /// @dev changes the content of Theatres[`theatreId`] with the last item. Then, pops the last item
-    function removeTheatre(uint theatreId) external checkTheatreExists(theatreId) {
+    function removeTheatre(uint theatreId) external checkTheatreExists(theatreId) onlyOwner {
         Theatre memory remove = Theatres[theatreId];
         Theatres[theatreId] = Theatres[Theatres.length - 1];
         Theatres.pop();
@@ -108,29 +130,39 @@ contract Cinema is Ownable {
     }
 
     /// @notice calculates total price for given amount of tickets
-    /// @dev 3% discount is applied
     /// @return price with decimals
     function getTotalPrice(uint theatreId, uint amount) public view returns (uint) {
+        return Theatres[theatreId].ticketPriceInCVG * amount;
+    }
+
+    /// @notice Discounted price for which should be specific for NFT owners
+    /// @dev `discountPercentage`% discount is applied
+    function getDiscountedTotalPrice(uint theatreId, uint amount) public view returns (uint) {
         require(amount > 0, "Ticket amount must be bigger than 0");
-        return (Theatres[theatreId].ticketPriceInCVG / 100) * 97 * amount;
+        return (Theatres[theatreId].ticketPriceInCVG / 100) * (100 - discountPercentage) * amount;
     }
 
     /// @notice Allows ticket selling in exchange of CVG tokens
-    /// @dev Increases theatre balance if the CVG token transfer process is completed successfully
+    /** @dev Increases theatre balance if the CVG token transfer process is completed successfully
+     ** The concept here is to prevent accounts and contracts to directly call this function
+     ** I prefer users to call this function via User contract so that we prevent issues where
+     ** they demand an update for their information section although they didn't use User contract
+     * */ 
     /// @return true if transaction is not reverted until the end of the function
-    function sellTicket(uint _theatreId, uint _saloonId, uint _ticketAmount) external 
+    function sellTicket(uint _theatreId, uint _saloonId, uint _ticketAmount, uint _price) external 
         checkTheatreExists(_theatreId) 
         checkSaloonExists(_theatreId, _saloonId) returns (bool) {
-        uint totalPrice = getTotalPrice(_theatreId, _ticketAmount);
+        require(msg.sender == address(userContract), "Please call this function via User contract (You can use our frontend)");
 
         Theatre storage updatedTheatre = Theatres[_theatreId];
+        require(_ticketAmount <= updatedTheatre.movieSaloons[_saloonId].numberOfAvailableSeats, "You cannot buy more than available seats");
 
-        bool sent = token.transferFrom(msg.sender, address(this), totalPrice);
+        bool sent = token.transferFrom(msg.sender, address(this), _price);
         require(sent, "There was a problem during buying process");
         
-        updatedTheatre.theatreBalance += totalPrice;
+        updatedTheatre.theatreBalance += _price;
 
-        emit TicketBought(tx.origin, _theatreId, updatedTheatre.name, _ticketAmount, totalPrice);
+        emit TicketBought(tx.origin, _theatreId, updatedTheatre.name, _ticketAmount, _price);
         return true;
     }
 

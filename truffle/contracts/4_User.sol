@@ -5,11 +5,11 @@ import "./1_ParibuNFT.sol";
 import "./2_CVGToken.sol";
 import "./3_Cinema.sol";
 
-address constant USDC_ADDRESS = 0x07865c6E87B9F70255377e024ace6630C1Eaa37F;
+// address constant USDC_ADDRESS = 0x07865c6E87B9F70255377e024ace6630C1Eaa37F; // Could be any 
 
-/// @title User side implementation of USDC deposit and ticket purchase
+/// @title User side implementation of fiat currency deposit and ticket purchase
 /// @author Burak Alaydın
-/** @notice This contract allows users to mint CVG token in exchange for USDC at 1:1 rate
+/** @notice This contract allows users to mint CVG token in exchange for fiat currency at 1:1 rate
 *** Users can also buy tickets or refund their deposits
 **/
 /** @dev The contract does not hold CVG and mints it for the users instead of transfering
@@ -18,20 +18,39 @@ address constant USDC_ADDRESS = 0x07865c6E87B9F70255377e024ace6630C1Eaa37F;
 **/
 /// @custom:disclaimer This contract is made for learning purposes
 contract User is Ownable {
-    CVGToken public token;
-    Cinema public cinema;
-    ERC20 public USDC;
+    ParibuNFT private nft;
+    CVGToken private token;
+    Cinema private cinema;
+    ERC20 public fiat;
 
-    uint private USDCBalance; 
+    uint private fiatBalance; 
     uint private CVGBalance;
     uint private ETHBalance;
 
     bool mutex = false;
 
-    constructor(address _token, address _fiat, address payable _cinema) {
+    constructor(address _nft,address _token, address _fiat, address payable _cinema) {
+        nft = ParibuNFT(_nft);
         token = CVGToken(_token);
-        USDC = ERC20(_fiat);
+        fiat = ERC20(_fiat);
         cinema = Cinema(_cinema);
+    }
+
+    /// @dev The following set methods can be used in case the dependent contract address changes
+    function setToken(address _token) public onlyOwner {
+        token = CVGToken(_token);
+    }
+
+    function setNft(address _nft) public onlyOwner {
+        nft = ParibuNFT(_nft);
+    }
+
+    function setCinema(address payable _cinema) public onlyOwner {
+        cinema = Cinema(_cinema);
+    }
+
+    function setFiat(address _fiat) public onlyOwner {
+        fiat = ERC20(_fiat);
     }
 
     struct S_User {
@@ -52,15 +71,15 @@ contract User is Ownable {
 
     event deposited(address indexed caller, uint amount, uint indexed date);
     event refunded(address indexed caller, uint amount);
-    event USDCWithdrawal(address indexed to, uint amount);
+    event fiatWithdrawal(address indexed to, uint amount);
     event CVGWithdrawal(address indexed to, uint amount);
 
     function getUser(address user) external view returns (S_User memory) {
         return addressToUser[user];
     }
 
-    function getUSDCBalance() public view returns (uint) {
-        return USDCBalance;
+    function getFiatBalance() public view returns (uint) {
+        return fiatBalance;
     }
 
     function getETHBalance() public view returns (uint) {
@@ -71,10 +90,10 @@ contract User is Ownable {
         return CVGBalance;
     }
 
-    function _USDCTransfer(uint256 amount) internal {
-        bool sent = USDC.transferFrom(msg.sender, address(this), amount);
-        require(sent, "There was a problem sending USDC");
-        USDCBalance += amount;
+    function _fiatTransfer(uint256 amount) internal {
+        bool sent = fiat.transferFrom(msg.sender, address(this), amount);
+        require(sent, "There was a problem sending fiat currency");
+        fiatBalance += amount;
     }
 
     function _tokenPurchase(uint amount) internal {
@@ -85,29 +104,29 @@ contract User is Ownable {
         updatedUser.lastPurchaseDate = block.timestamp;
     }
 
-    /// @notice Transfers 10 USDC from user to the contract in return of CVG at 1:1 rate.
+    /// @notice Transfers 10 fiat currency from user to the contract in return of CVG at 1:1 rate.
     /// @dev The transfer amount is hardcoded instead of taken as parameter since the actual implementation of "CVG Para" works the same way.
     function mint10CVG() external {
         uint amount = 10 * (10**6);
-        _USDCTransfer(amount);
+        _fiatTransfer(amount);
         token.mintToken(msg.sender, amount);
         _tokenPurchase(amount);
         emit deposited(msg.sender, 10, block.timestamp);
     }
 
-    /// @notice Transfers 20 USDC from user to the contract in return of CVG at 1:1 rate.
+    /// @notice Transfers 20 fiat currency from user to the contract in return of CVG at 1:1 rate.
     function mint20CVG() external {
         uint amount = 20 * (10**6);
-        _USDCTransfer(amount);
+        _fiatTransfer(amount);
         token.mintToken(msg.sender, amount);
         _tokenPurchase(amount);
         emit deposited(msg.sender, 20, block.timestamp);
     }
 
-    /// @notice Transfers 30 USDC from user to the contract in return of CVG at 1:1 rate.
+    /// @notice Transfers 30 fiat currency from user to the contract in return of CVG at 1:1 rate.
     function mint30CVG() external {
         uint amount = 30 * (10**6);
-        _USDCTransfer(amount);
+        _fiatTransfer(amount);
         token.mintToken(msg.sender, amount);
         _tokenPurchase(amount);
         emit deposited(msg.sender, 30, block.timestamp);
@@ -151,7 +170,13 @@ contract User is Ownable {
     function ticketBuy(uint cinemaId, uint saloonId, uint ticketAmount) external returns (bool) {
         require(ticketAmount > 0, "Ticket amount must be more than 0");
 
-        uint totalPrice = cinema.getTotalPrice(cinemaId, ticketAmount);
+        uint totalPrice = 0;
+        if(nft._hasNFT(msg.sender)) {
+            totalPrice = cinema.getDiscountedTotalPrice(cinemaId, ticketAmount);
+        }
+        else {
+            totalPrice = cinema.getTotalPrice(cinemaId, ticketAmount);
+        }
 
         // Check if the function is locked, if not, continue and lock
         require(!mutex, "Locked");
@@ -166,7 +191,7 @@ contract User is Ownable {
         require(approved, "Token approval failed");
 
         // Send tokens to cinema contract via its function sellTicket()
-        sent = cinema.sellTicket(cinemaId, saloonId, ticketAmount);
+        sent = cinema.sellTicket(cinemaId, saloonId, ticketAmount, totalPrice);
         require(sent, "There was a problem during escrow transfer process");
 
         // Unlock
@@ -181,7 +206,7 @@ contract User is Ownable {
     *** Before the transfer process, equalizes the last purchase date to 0 and decreases the user's inactive deposit amount.
     *** Transfers CVG tokens from user to this contract
     *** Increases CVG balance of the contract
-    *** Sends USDC back to user
+    *** Sends fiat back to user
     **/
     function refund(uint amount) external returns (bool) {
         S_User storage user = addressToUser[msg.sender];
@@ -202,26 +227,26 @@ contract User is Ownable {
         require(sent, "CVG transfer for refund process had some issues");
 
         CVGBalance += amount;
-        USDCBalance -= amount;
+        fiatBalance -= amount;
 
-        sent = USDC.transfer(msg.sender, amount);
-        require(sent, "USDC transfer for refund process had some issues");
+        sent = fiat.transfer(msg.sender, amount);
+        require(sent, "fiat transfer for refund process had some issues");
 
         emit refunded(msg.sender, amount);
         return true;
     }
 
-    /// @notice Withdraws the given amount from USDC balance of the contract to given address
+    /// @notice Withdraws the given amount from fiat balance of the contract to given address
     /// @dev Only the contract owner can withdraw. Could be improved by Access Control
-    function withdrawUSDC(address to, uint amount) public onlyOwner returns (bool) {
-        require(amount <= USDCBalance, "Insufficient Balance");
+    function withdrawFiat(address to, uint amount) public onlyOwner returns (bool) {
+        require(amount <= fiatBalance, "Insufficient Balance");
 
-        USDCBalance -= amount;
+        fiatBalance -= amount;
 
-        bool sent = USDC.transfer(to, amount);
-        require(sent, "Could not withdraw USDC");
+        bool sent = fiat.transfer(to, amount);
+        require(sent, "Could not withdraw fiat");
 
-        emit USDCWithdrawal(to, amount);
+        emit fiatWithdrawal(to, amount);
         return true;
     }
 

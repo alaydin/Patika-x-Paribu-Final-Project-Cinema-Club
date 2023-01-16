@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
+import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 /// @title NFT contract for cinema club membership
 /// @author Burak Alaydın
@@ -23,9 +23,9 @@ contract ParibuNFT is ERC721URIStorage, Ownable {
     /// @notice Mints a new NFT to the given address
     /// @dev A caller who has already minted an NFT should not be able to mint again
     /// @param recipient Will be the owner of freshly minted NFT
-    /// @param tokenURI IPFS hashed CID
+    /// @param _tokenURI IPFS hashed CID
     /// @return ID of the minted NFT
-    function mintNFT(address recipient, string memory tokenURI)
+    function mintNFT(address recipient, string memory _tokenURI)
         public
         returns (uint256)
     {
@@ -37,7 +37,7 @@ contract ParibuNFT is ERC721URIStorage, Ownable {
 
         uint256 newItemId = _tokenIds.current();
         _safeMint(recipient, newItemId);
-        _setTokenURI(newItemId, tokenURI);
+        _setTokenURI(newItemId, _tokenURI);
 
         return newItemId;
     }
