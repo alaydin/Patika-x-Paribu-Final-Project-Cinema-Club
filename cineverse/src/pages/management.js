@@ -90,8 +90,7 @@ export default function management() {
         try {
             const added = await cinemaContract.addMovieSaloon(theatreId, numberOfSeats);
             await added.wait();
-            handleNewTransaction("Transaction successful: " + added.hash);
-            handleNewTransaction("Movie Saloon with ID " + removeSaloonId + " has been added");
+            handleNewTransaction("Movie Saloon has been added. \nTransaction successful: " + added.hash);
             await getTheatres();
         } catch {
             handleRejectedransaction("Transaction rejected");
@@ -102,8 +101,7 @@ export default function management() {
         try {
             const removed = await cinemaContract.removeTheatre(removeTheatreId);
             await removed.wait();
-            handleNewTransaction("Transaction successful: " + removed.hash);
-            handleNewTransaction("Movie Theare with ID " + removeTheatreId + " has been removed");
+            handleNewTransaction("Movie Theare with ID " + removeTheatreId + " has been removed" + "\nTransaction successful: " + removed.hash);
             await getTheatres();
         } catch {
             handleRejectedransaction("Transaction rejected");
@@ -114,8 +112,7 @@ export default function management() {
         try {
             const removed = await cinemaContract.removeSaloon(tIdForRemoveSaloon, removeSaloonId);
             await removed.wait();
-            handleNewTransaction("Transaction successful: " + removed.hash);
-            handleNewTransaction("Movie Saloon with ID " + removeSaloonId + " has been removed");
+            handleNewTransaction("Movie Saloon with ID " + removeSaloonId + " has been removed" + "\nTransaction successful: " + removed.hash);
             await getTheatres();
         } catch {
             handleRejectedransaction("Transaction rejected");
@@ -127,8 +124,7 @@ export default function management() {
             console.log(updatedTheatre, updatedPrice);
             const updated = cinemaContract.updateTicketPrice(updatedTheatre, updatedPrice);
             await updated;
-            handleNewTransaction("Transaction successful: " + updated.hash);
-            handleNewTransaction("Price updated to " + updatedPrice);
+            handleNewTransaction("Price updated to " + updatedPrice + "\nTransaction successful: " + updated.hash);
         } catch {
             handleRejectedransaction("Transaction rejected");
         }
@@ -138,7 +134,7 @@ export default function management() {
         try {
             const withdrew = cinemaContract.withdrawBalances();
             await withdrew.wait();
-            handleNewTransaction("Transaction successful: " + added.hash);
+            handleNewTransaction("Transaction successful: " + withdrew.hash);
         } catch {
             handleRejectedransaction("Transaction rejected");
         }
@@ -228,7 +224,7 @@ export default function management() {
                     <div>
                         <h2>Update Ticket Price</h2>
                         <Input
-                            label="ID"
+                            label="Update ID"
                             type="number"
                             validation={{
                                 numberMin: 0,
@@ -248,7 +244,7 @@ export default function management() {
                             style={{ marginRight: '10px', borderRadius: '10px', display: 'inline-block' }}
                         />
                         <Button
-                            text='Remove'
+                            text='Update'
                             size="regular"
                             isFullWidth={false}
                             theme={'moneyPrimary'}
@@ -259,7 +255,7 @@ export default function management() {
                     <div>
                         <h2>Remove Movie Theatre</h2>
                         <Input
-                            label="ID"
+                            label="Remove ID"
                             type="number"
                             validation={{
                                 numberMin: 0,

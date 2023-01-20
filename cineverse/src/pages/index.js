@@ -48,7 +48,7 @@ export default function Home() {
     try {
       const id = await nftContract.mintNFT(connection.address, TOKEN_URI);
       await id.wait();
-      await getUser();
+      setHasNFT(true);
       handleNewTransaction("NFT minted successfully: " + id.hash);
     }
     catch {
@@ -126,8 +126,10 @@ export default function Home() {
   // const nftGate = await alchemy.nft.verifyNftOwnership(connection.address, NFT_CONTRACT_ADDRESS); // Devnet
   useEffect(() => {
     const checkNFTandGetUser = async () => {
+      console.log(hasNFT);
       const nftGate = await nftContract._hasNFT(connection.address);
       setHasNFT(nftGate);
+      console.log(hasNFT);
       if (nftGate) {
         await getUser();
       }
