@@ -12,18 +12,18 @@ The logic contains two parts: User side and management side implementations.
 
 More will be added before Jan 22. For now, you can read the contracts which are commented for both developers and non-developers.
 
-## Screenshots
+## [Screenshots](./Screenshots/)
 
 Home:
 
-[home-page](./Screenshots/cineverse-home.png)
+[home-page](https://ibb.co/m9PKtvp)
 
 Cinema:
 
-[cinema-page](./Screenshots/cineverse-cinema.png)
+[cinema-page](https://ibb.co/wsdVHYX)
 
 Management:
 
-[management-page](./Screenshots/cineverse-management_1.png)
+[management-page](https://ibb.co/qsHsn85)
 
-[management-page-contd](./Screenshots/cineverse_management_2.png)
+[management-page-contd](https://ibb.co/xfzB6SF)
