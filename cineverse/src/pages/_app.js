@@ -9,11 +9,11 @@ import useConnection from "../../Web3-hooks/useConnection"
 import useContract from 'Web3-hooks/useContract';
 import { Button, useNotification, NotificationProvider } from '@web3uikit/core';
 
-import nftJSON from "../../../truffle/build/contracts/ParibuNFT.json";
-import tokenJSON from "../../../truffle/build/contracts/CVGToken.json";
-import cinemaJSON from "../../../truffle/build/contracts/Cinema.json";
-import userJSON from "../../../truffle/build/contracts/User.json";
-import fiatJSON from "../../../truffle/build/contracts/DummyToken.json"; // Truffle env, comment when devnet
+import nftJSON from "../../../truffle-local/build/contracts/ParibuNFT.json";
+import tokenJSON from "../../../truffle-local/build/contracts/CVGToken.json";
+import cinemaJSON from "../../../truffle-local/build/contracts/Cinema.json";
+import userJSON from "../../../truffle-local/build/contracts/User.json";
+import fiatJSON from "../../../truffle-local/build/contracts/DummyToken.json"; // Truffle env, comment when devnet
 
 // import USDCABI from "../ABIs/USDC.json";
 // import nftJSON from "../../smartcontracts/artifacts/contracts/1_ParibuNFT.sol/ParibuNFT.json";
