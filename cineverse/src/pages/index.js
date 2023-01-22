@@ -49,7 +49,7 @@ export default function Home() {
       const id = await nftContract.mintNFT(connection.address, TOKEN_URI);
       await id.wait();
       setHasNFT(true);
-      handleNewTransaction("NFT minted successfully: " + id.hash);
+      handleNewTransaction("Transaction sent successfully: " + id.hash);
     }
     catch {
       console.log("Transaction not approved");
@@ -59,36 +59,36 @@ export default function Home() {
   async function deposit10() {
     try {
       const approved = await USDCContract.approve(USER_CONTRACT_ADDRESS, 10 * 1e6);
-      const deposited = await userContract.mint10CVG();
+      const deposited = await userContract.mint10CGV();
       await deposited.wait();
       await getUser();
-      handleNewTransaction("Transaction successful: " + deposited.hash);
-    } catch (error) {
-      handleRejectedransaction(error);
+      handleNewTransaction("Transaction sent: " + deposited.hash);
+    } catch {
+      handleRejectedransaction("Something went wrong");
     }
   }
 
   async function deposit20() {
     try {
       const approved = await USDCContract.approve(USER_CONTRACT_ADDRESS, 20 * 1e6);
-      const deposited = await userContract.mint20CVG();
+      const deposited = await userContract.mint20CGV();
       await deposited.wait();
       await getUser();
-      handleNewTransaction("Transaction successful: " + deposited.hash);
-    } catch (error) {
-      handleRejectedransaction(error);
+      handleNewTransaction("Transaction sent: " + deposited.hash);
+    } catch {
+      handleRejectedransaction("Something went wrong");
     }
   }
 
   async function deposit30() {
     try {
       const approved = await USDCContract.approve(USER_CONTRACT_ADDRESS, 30 * 1e6);
-      const deposited = await userContract.mint30CVG();
+      const deposited = await userContract.mint30CGV();
       await deposited.wait();
       await getUser();
-      handleNewTransaction("Transaction successful: " + deposited.hash);
-    } catch (error) {
-      handleRejectedransaction(error);
+      handleNewTransaction("Transaction sent: " + deposited.hash);
+    } catch {
+      handleRejectedransaction("Something went wrong");
     }
   }
 
@@ -143,11 +143,11 @@ export default function Home() {
 
   return (
     <>
-      <div style={{ justifyItems: 'center' }}>
-        <div className='tabContent'>
+      <div className={styles.container}>
+        <div>
           {!hasNFT && (
-            <div>
-              <h2>Become a Member and start earning</h2>
+            <div className={styles.contentDiv}>
+              <h2>Become a Member and start earning!</h2>
               <Button text={(connection.address) ? "Mint Paribu NFT to become member!" : "Connect yout wallet first!"}
                 disabled={hasNFT}
                 onClick={() => mintParibuNFT()}
@@ -156,23 +156,22 @@ export default function Home() {
             </div>
           )}
           {hasNFT &&
-            <div>
+            <div className={styles.contentDiv}>
               <h2>Your Stats</h2>
-              <section style={{ display: 'flex', gap: '10px', padding: '10px 10px 10px 0px' }}>
-                <Widget info={(userBalance / 1e6).toString()} title="CVG Balance" />
-                <Widget info={seenMovieCount.toString()} title="Seen Movie Count" />
-                <Widget info={(userRank == 0) ? "Novice" : (userRank == 1) ? "Casual" : (userRank == 2) ? "Movie Expert" : ""} title="User Rank" />
+              <section style={{ display: 'flex', gap: '10px' }}>
+                <Widget className={styles.infoWidget} style={{ backgroundColor: 'transparent' }} info={(userBalance / 1e6).toString()} title="CGV Balance" />
+                <Widget className={styles.infoWidget} style={{ backgroundColor: 'transparent' }} info={seenMovieCount.toString()} title="Seen Movie Count" />
+                <Widget className={styles.infoWidget} style={{ backgroundColor: 'transparent' }} info={(userRank == 0) ? "Novice" : (userRank == 1) ? "Casual" : (userRank == 2) ? "Movie Expert" : ""} title="User Rank" />
               </section>
             </div>
           }
           <div>
-            <h2>Get CVG Tokens and enjoy discounts</h2>
+            <h2>Get CGV Tokens and enjoy discounts</h2>
             {/* <img src={d100}></img> */}
             <div style={{ display: 'inline-block', padding: '5px 5px 5px 0px' }}>
               <Button
-                className={styles.customButton}
                 disabled={!hasNFT}
-                text={"Purchase 10 CVG Token"}
+                text={"Purchase 10 CGV"}
                 size="regular"
                 isFullWidth={false}
                 theme={'moneyPrimary'}
@@ -183,7 +182,7 @@ export default function Home() {
             <div style={{ display: 'inline-block', padding: '5px 5px 5px 0px' }}>
               <Button
                 disabled={!hasNFT}
-                text={"Purchase 20 CVG Token"}
+                text={"Purchase 20 CGV"}
                 size="regular"
                 isFullWidth={false}
                 theme={'moneyPrimary'}
@@ -194,7 +193,7 @@ export default function Home() {
             <div style={{ display: 'inline-block', padding: '5px 5px 5px 0px' }}>
               <Button
                 disabled={!hasNFT}
-                text={"Purchase 30 CVG Token"}
+                text={"Purchase 30 CGV"}
                 size="regular"
                 isFullWidth={false}
                 theme={'moneyPrimary'}
@@ -203,16 +202,20 @@ export default function Home() {
               />
             </div>
           </div>
-          {hasNFT && // Change it to "hasNFT"
+          {hasNFT &&
             <div>
               <Widget
-                info={`${(refundableAmount / 1e6).toString()} Tokens`}
-                title='Refund' style={{
-                  display: 'inline-block',
+                className={styles.refundWidget}
+                info={`Max: ${(refundableAmount / 1e6).toString()} Tokens`}
+                title='Refund'
+                style={{
+                  display: 'grid',
                   backgroundColor: "transparent",
-
+                  border: 'none',
+                  alignItems: 'center', justifyContent: 'center'
                 }} >
                 <Input
+                  style={{ display: 'grid', marginTop: '15px', marginBottom: '15px', borderRadius: '10px', borderColor: 'cornflowerblue' }}
                   label="Amount"
                   type="number"
                   validation={{
@@ -220,9 +223,8 @@ export default function Home() {
                     min: 0
                   }}
                   onChange={(e) => setRefundRequest(e.target.value)}
-                  style={{ marginTop: '15px', marginBottom: '15px', borderRadius: '10px' }}
                 />
-                <Button text='Refund' theme='colored' color='red' onClick={() => refund()}></Button>
+                <Button style={{ display: 'inline-flex' }} text='Refund' theme='colored' color='red' onClick={() => refund()}></Button>
               </Widget>
             </div>
           }

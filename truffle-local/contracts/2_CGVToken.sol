@@ -5,16 +5,16 @@ import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "../node_modules/@openzeppelin/contracts/access/AccessControl.sol";
 
-/// @title Token contract for "CVG Para"
+/// @title Token contract for "CGV Para"
 /// @author Burak Alaydın
 /// @notice Creates a new ERC20 token which will be used for ticket purchases
 /// @dev 
 /// @custom:disclaimer This contract is made for learning purposes
-contract CVGToken is ERC20, ERC20Burnable, AccessControl {
+contract CGVToken is ERC20, ERC20Burnable, AccessControl {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
     /// @dev grants admin and minter role to `msg.sender`
-    constructor() ERC20("CVG Para", "CVG") {
+    constructor() ERC20("CGV Para", "CGV") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
     }

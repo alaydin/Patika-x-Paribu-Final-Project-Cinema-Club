@@ -1,20 +1,76 @@
-.customButton {
-  /*background-image: url("../../assets/100_v6.png");*/
-  background-size: cover;
-  background-position: center;
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  font-size: 16px;
-  color: white;
-  cursor: pointer;
-}
-
-.customButton:hover {
-  background-color: rgba(0, 0, 0, 0.8);
-}
-
 .container {
-  width: 50%; /* or any width */
-  margin: 0 auto;
+  display: flex;
+  /* Enable flexbox layout */
+  flex-wrap: wrap;
+  /* Allow items to wrap to next line */
+  justify-content: center;
+  /* Center items horizontally */
+  align-items: center;
+  /* Center items vertically */
+  align-content: space-between;
+  /* Add space between items */
+  text-align: center;
+}
+
+.contentDiv {
+  margin-top: 5em;
+  margin-bottom: 5em;
+  display: grid;
+  
+  flex-wrap: wrap;
+  
+  justify-content: center;
+  
+  align-items: center;
+}
+
+.infoWidget {
+  background-color: transparent;
+  background: transparent;
+  font-family: "Gill Sans", sans-serif;
+  position: relative;
+  width: 150px;
+  height: 120px;
+}
+
+
+/* .infoWidget span {
+  font-family: "Gill Sans", sans-serif;
+  text-align: center;
+  font-size: 20px;
+  top: 0;
+} */
+
+.infoWidget h3 {
+  font-family: "Gill Sans", sans-serif;
+  font-size: 22px;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+
+
+.refundWidget {
+  background-color: transparent;
+  background: transparent;
+  font-family: "Gill Sans", sans-serif;
+  position: relative;
+}
+
+.refundWidget span {
+  color: red;
+  font-family: "Gill Sans", sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.refundWidget h3 {
+  color: red;
+  font-family: "Gill Sans", sans-serif;
+  font-size: 24px;
+  font-weight: bold;
 }

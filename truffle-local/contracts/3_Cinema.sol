@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import "./2_CVGToken.sol";
+import "./2_CGVToken.sol";
 import "./4_User.sol";
 
 /// @title An implementation of managing movie theatres on blockchain
@@ -11,7 +11,7 @@ import "./4_User.sol";
 /// @dev 
 /// @custom:disclaimer This contract is made for learning purposes
 contract Cinema is Ownable {
-    CVGToken private token;
+    CGVToken private token;
     User private userContract;
 
     uint private ETHBalance;
@@ -19,12 +19,12 @@ contract Cinema is Ownable {
     uint discountPercentage = 3;
 
     constructor(address _token) Ownable() {
-        token = CVGToken(_token);
+        token = CGVToken(_token);
     }
 
     /// @dev The following set method(s) can be used in case the dependent contract address changes
     function setToken(address _token) public onlyOwner {
-        token = CVGToken(_token);
+        token = CGVToken(_token);
     }
 
     /// @dev Make sure you set User contract address to unlock ticket buying/selling for both this and User contract
@@ -35,7 +35,7 @@ contract Cinema is Ownable {
     struct Theatre {
         string name;
         string location;
-        uint ticketPriceInCVG;
+        uint ticketPriceInCGV;
         uint theatreBalance;    // Each theatre keeps their own balance so profit analysis can be made
         MovieSaloon[] movieSaloons;
     }
@@ -44,7 +44,7 @@ contract Cinema is Ownable {
     event TheatreRemoved(uint id, string name, string indexed location);
     event TicketPriceUpdated(uint id, string name, uint oldPrice, uint indexed updatedPrice);
     event TicketBought(address indexed buyer, uint id, string name, uint ticketAmount, uint price);
-    event WithdrewCVG(uint indexed id, uint amount);
+    event WithdrewCGV(uint indexed id, uint amount);
 
     struct MovieSaloon {
         uint id;
@@ -88,7 +88,7 @@ contract Cinema is Ownable {
         Theatre storage newTheatre = Theatres.push();
         newTheatre.name = name;
         newTheatre.location = location;
-        newTheatre.ticketPriceInCVG = price * (10 ** token.decimals());
+        newTheatre.ticketPriceInCGV = price * (10 ** token.decimals());
         emit NewTheatreAdded(Theatres.length - 1, name, location);
     }
 
@@ -105,8 +105,8 @@ contract Cinema is Ownable {
     function updateTicketPrice(uint theatreId, uint price) external checkTheatreExists(theatreId) onlyOwner {
         require(price > 0, "Price cannot be negative");
         Theatre storage updatedTheatre = Theatres[theatreId];
-        uint previousPrice = updatedTheatre.ticketPriceInCVG;
-        updatedTheatre.ticketPriceInCVG = price * (10 ** token.decimals());
+        uint previousPrice = updatedTheatre.ticketPriceInCGV;
+        updatedTheatre.ticketPriceInCGV = price * (10 ** token.decimals());
         emit TicketPriceUpdated(theatreId, updatedTheatre.name, previousPrice, price);
     }
 
@@ -132,18 +132,18 @@ contract Cinema is Ownable {
     /// @notice calculates total price for given amount of tickets
     /// @return price with decimals
     function getTotalPrice(uint theatreId, uint amount) public view returns (uint) {
-        return Theatres[theatreId].ticketPriceInCVG * amount;
+        return Theatres[theatreId].ticketPriceInCGV * amount;
     }
 
     /// @notice Discounted price for which should be specific for NFT owners
     /// @dev `discountPercentage`% discount is applied
     function getDiscountedTotalPrice(uint theatreId, uint amount) public view returns (uint) {
         require(amount > 0, "Ticket amount must be bigger than 0");
-        return (Theatres[theatreId].ticketPriceInCVG / 100) * (100 - discountPercentage) * amount;
+        return (Theatres[theatreId].ticketPriceInCGV / 100) * (100 - discountPercentage) * amount;
     }
 
-    /// @notice Allows ticket selling in exchange of CVG tokens
-    /** @dev Increases theatre balance if the CVG token transfer process is completed successfully
+    /// @notice Allows ticket selling in exchange of CGV tokens
+    /** @dev Increases theatre balance if the CGV token transfer process is completed successfully
      ** The concept here is to prevent accounts and contracts to directly call this function
      ** I prefer users to call this function via User contract so that we prevent issues where
      ** they demand an update for their information section although they didn't use User contract
@@ -180,7 +180,7 @@ contract Cinema is Ownable {
             bool sent = token.transfer(owner(),amount);
             require(sent, "Withdraw failed");
 
-            emit WithdrewCVG(i, Theatres[i].theatreBalance);
+            emit WithdrewCGV(i, Theatres[i].theatreBalance);
         }
     }
 

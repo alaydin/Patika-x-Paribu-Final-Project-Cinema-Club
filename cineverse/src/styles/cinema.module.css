@@ -14,7 +14,8 @@
 .box {
     background-color: transparent;
     border: 2px solid lightblue;
-    border-radius: 5px;
+    border-radius: 15px;
+    border-color: blueviolet;
     padding: 10px;
     /* min-width: 150px; */
     min-height: 150px;

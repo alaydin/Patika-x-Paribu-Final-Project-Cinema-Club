@@ -1,13 +1,35 @@
 /* styles.css */
+html,
 body {
-  /* background-image: url("../../assets/cinema.jpeg"); */
+  margin: 0;
+  padding: 0;
+  color: cornflowerblue;
+  font-family: sans-serif;
+  min-height: 100%;
+  /* overflow: auto; */
   background-size: cover;
-  background-position: top;
-
-  color: cornflowerblue;
+  /* background-attachment: fixed; */
+  /* background-image: url('../../assets/paribu.jpeg') */
 }
 
-h2 {
-  color: cornflowerblue;
-  font-family: "Gill Sans", sans-serif;
-}
+/* @keyframes slide-show {
+  0% {
+    background-image: url('image1.jpg');
+  }
+
+  25% {
+    background-image: url('image2.jpg');
+  }
+
+  50% {
+    background-image: url('image3.jpg');
+  }
+
+  75% {
+    background-image: url('image4.jpg');
+  }
+
+  100% {
+    background-image: url('image1.jpg');
+  }
+} */

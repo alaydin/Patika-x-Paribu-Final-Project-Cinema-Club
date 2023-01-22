@@ -3,21 +3,20 @@ import { useEffect } from 'react';
 export const MyContext = React.createContext();
 import "../styles/globals.css";
 
-// import '@/styles/globals.css'
 import MyNavbar from './components/Navbar'
 import useConnection from "../../Web3-hooks/useConnection"
 import useContract from 'Web3-hooks/useContract';
 import { Button, useNotification, NotificationProvider } from '@web3uikit/core';
 
 import nftJSON from "../../../truffle-local/build/contracts/ParibuNFT.json";
-import tokenJSON from "../../../truffle-local/build/contracts/CVGToken.json";
+import tokenJSON from "../../../truffle-local/build/contracts/CGVToken.json";
 import cinemaJSON from "../../../truffle-local/build/contracts/Cinema.json";
 import userJSON from "../../../truffle-local/build/contracts/User.json";
 import fiatJSON from "../../../truffle-local/build/contracts/DummyToken.json"; // Truffle env, comment when devnet
 
 // import USDCABI from "../ABIs/USDC.json";
 // import nftJSON from "../../smartcontracts/artifacts/contracts/1_ParibuNFT.sol/ParibuNFT.json";
-// import tokenJSON from "../../smartcontracts/artifacts/contracts/2_CVGToken.sol/CVGToken.json";
+// import tokenJSON from "../../smartcontracts/artifacts/contracts/2_CGVToken.sol/CGVToken.json";
 // import cinemaJSON from "../../smartcontracts/artifacts/contracts/3_Cinema.sol/Cinema.json";
 // import userJSON from "../../smartcontracts/artifacts/contracts/4_User.sol/User.json";
 
@@ -48,22 +47,24 @@ export default function App({ Component, pageProps }) {
   }, [nftContract, tokenContract, cinemaContract, userContract, USDCContract])
 
   return (
-    <NotificationProvider>
-      <MyContext.Provider value={{ connection, TOKEN_URI, nftContract, tokenContract, cinemaContract, userContract, USDCContract }}>
-        <MyNavbar></MyNavbar>
-        <div>
-          <Button id='connectButton'
-            text={(connection.address === undefined || connection.address === "") ? "Connect Wallet" : `${connection.address.slice(0, 5)}...${connection.address.slice(-4)}`}
-            theme="colored"
-            color="blue"
-            onClick={connection.connect}></Button>
-        </div>
-        {isLoading ?
-          <div>Loading contracts</div>
-          :
-          <Component {...pageProps} />
-        }
-      </MyContext.Provider>
-    </NotificationProvider>
+    <MyContext.Provider value={{ connection, TOKEN_URI, nftContract, tokenContract, cinemaContract, userContract, USDCContract }}>
+      <div className='background'>
+        <NotificationProvider>
+          <MyNavbar></MyNavbar>
+          <div>
+            <Button id='connectButton'
+              text={(connection.address === undefined || connection.address === "") ? "Connect Wallet" : `${connection.address.slice(0, 5)}...${connection.address.slice(-4)}`}
+              theme="colored"
+              color="blue"
+              onClick={connection.connect}></Button>
+          </div>
+          {isLoading ?
+            <div>Loading contracts</div>
+            :
+            <Component {...pageProps} />
+          }
+        </NotificationProvider >
+      </div>
+    </MyContext.Provider>
   )
 }

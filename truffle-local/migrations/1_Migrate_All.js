@@ -1,5 +1,5 @@
 var nftContract = artifacts.require("ParibuNFT");
-var tokenContract = artifacts.require("CVGToken");
+var tokenContract = artifacts.require("CGVToken");
 var dummyContract = artifacts.require("DummyToken");
 var cinemaContract = artifacts.require("Cinema");
 var userContract = artifacts.require("User");

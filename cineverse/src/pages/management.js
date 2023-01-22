@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, use } from 'react';
 import { MyContext } from './_app';
-import { useNotification, Input, Button, Table } from '@web3uikit/core';
+import { useNotification, Input, Button, Table, Widget } from '@web3uikit/core';
 
 import styles from "../styles/management.module.css"
 
@@ -19,6 +19,7 @@ export default function management() {
 
     // State variables
     const [theatres, setTheatres] = useState([]);
+    const [usdc, setUsdc] = useState(0);
     //Adding
     const [name, setName] = useState("");
     const [location, setLocation] = useState("");
@@ -32,6 +33,9 @@ export default function management() {
     const [removeTheatreId, setRemoveTheatreId] = useState(0);
     const [tIdForRemoveSaloon, setTIdForRemoveSaloon] = useState(0);
     const [removeSaloonId, setRemoveSaloonId] = useState(0);
+    //Withdraw
+    const [usdcReceiver, setUsdcReceiver] = useState();
+    const [usdcInput, setUsdcInput] = useState(0);
 
 
     // Notifications
@@ -44,7 +48,7 @@ export default function management() {
             position: 'topL',
         });
     };
-    const handleRejectedransaction = (message) => {
+    const handleRejectedTransaction = (message) => {
         dispatch({
             type: 'error',
             message: message,
@@ -65,13 +69,13 @@ export default function management() {
                     theatre.location,
                     theatre.name,
                     theatre.movieSaloons.length,
-                    Number(theatre.ticketPriceInCVG / 1e6),
+                    Number(theatre.ticketPriceInCGV / 1e6),
                     Number(theatre.theatreBalance / 1e6),
                 ]
             }));
             setTheatres(theatres);
         } catch {
-            handleRejectedransaction();
+            handleRejectedTransaction();
         }
     }
 
@@ -82,7 +86,7 @@ export default function management() {
             handleNewTransaction("Transaction successful: " + added.hash);
             await getTheatres();
         } catch {
-            handleRejectedransaction("Transaction rejected");
+            handleRejectedTransaction("Transaction rejected");
         }
     }
 
@@ -93,7 +97,7 @@ export default function management() {
             handleNewTransaction("Movie Saloon has been added. \nTransaction successful: " + added.hash);
             await getTheatres();
         } catch {
-            handleRejectedransaction("Transaction rejected");
+            handleRejectedTransaction("Transaction rejected");
         }
     }
 
@@ -104,7 +108,7 @@ export default function management() {
             handleNewTransaction("Movie Theare with ID " + removeTheatreId + " has been removed" + "\nTransaction successful: " + removed.hash);
             await getTheatres();
         } catch {
-            handleRejectedransaction("Transaction rejected");
+            handleRejectedTransaction("Transaction rejected");
         }
     }
 
@@ -115,42 +119,66 @@ export default function management() {
             handleNewTransaction("Movie Saloon with ID " + removeSaloonId + " has been removed" + "\nTransaction successful: " + removed.hash);
             await getTheatres();
         } catch {
-            handleRejectedransaction("Transaction rejected");
+            handleRejectedTransaction("Transaction rejected");
         }
     }
 
     async function updatePrice() {
         try {
-            console.log(updatedTheatre, updatedPrice);
-            const updated = cinemaContract.updateTicketPrice(updatedTheatre, updatedPrice);
-            await updated;
-            handleNewTransaction("Price updated to " + updatedPrice + "\nTransaction successful: " + updated.hash);
+            // console.log(updatedTheatre, updatedPrice);
+            const updated = await cinemaContract.updateTicketPrice(updatedTheatre, updatedPrice);
+            await updated.wait();
+            handleNewTransaction("Ticket price for the theatre with ID " + updatedTheatre + " has been updated to " + updatedPrice + "\nTransaction hash: " + updated.hash);
+            await getTheatres();
         } catch {
-            handleRejectedransaction("Transaction rejected");
+            handleRejectedTransaction("Transaction rejected");
         }
     }
 
     async function withdrawAll() {
         try {
-            const withdrew = cinemaContract.withdrawBalances();
+            const withdrew = await cinemaContract.withdrawBalances();
             await withdrew.wait();
-            handleNewTransaction("Transaction successful: " + withdrew.hash);
+            handleNewTransaction("Transaction hash: " + withdrew.hash);
+            await getTheatres();
         } catch {
-            handleRejectedransaction("Transaction rejected");
+            handleRejectedTransaction("Transaction rejected");
         }
+    }
+
+    async function withdrawUSDC() {
+        try {
+            const withdrew = userContract.withdrawCGV(usdcReceiver, usdcInput);
+            await withdrew.wait();
+            handleNewTransaction("Transaction sent: " + withdrew.hash);
+        } catch {
+            handleRejectedTransaction("Transaction rejected");
+        }
+    }
+
+    async function getFiat() {
+        // // try {
+        // const getUsdc = userContract.getFiatBalance();
+        // await getUsdc;
+        // console.log("USDC:" + getUsdc.result);
+        // setUsdc(getUsdc.value);
+        // // } catch {
+        // //     handleRejectedTransaction("Transaction rejected");
+        // // }
     }
 
     useEffect(() => {
         if (theatres.length <= 0) {
             getTheatres();
         }
+        // getFiat();
     }, []);
 
 
     return (
         <>
             <div className={styles.container}>
-                <h2>Add Theatre and Saloon</h2>
+                <h2>Add Movie Theatre</h2>
                 <Input
                     label="Name"
                     type="text"
@@ -342,6 +370,48 @@ export default function management() {
                     />
                 </div>
             }
+            {/* <div>
+                <h2>Withdraw USDC in User Contract</h2>
+                <Widget
+                    className={styles.refundWidget}
+                    info={`${(usdc / 1e6).toString()} USDC`}
+                    title='Withdraw'
+                    style={{
+                        display: 'grid',
+                        backgroundColor: "transparent",
+                        border: 'none',
+                        // alignItems: 'center', justifyContent: 'center'
+                    }} >
+                    <Input
+                        label="Address"
+                        type="text"
+                        validation={{
+                            required: true
+                        }}
+                        onChange={(e) => setUsdcReceiver(e.target.value)}
+                        style={{ marginRight: '10px', borderRadius: '10px' }}
+                    />
+                    <Input
+                        label="Amount"
+                        type="number"
+                        validation={{
+                            numberMin: 0,
+                            required: true
+                        }}
+                        onChange={(e) => setUsdcInput(e.target.value)}
+                        style={{ marginRight: '10px', borderRadius: '10px' }}
+                    />
+                    <Button
+                        text='Withdraw'
+                        size="regular"
+                        isFullWidth={false}
+                        theme={'moneyPrimary'}
+                        style={{ padding: "1em", paddingTop: "0.5em", paddingBottom: "0.5em", marginTop: "1em" }}
+                        onClick={() => withdrawUSDC()}
+                    />
+                </Widget>
+
+            </div> */}
         </>
     )
 }

@@ -49,7 +49,7 @@ export default function cinema() {
                     id: index,
                     name: theatre.name,
                     location: theatre.location,
-                    price: Number(theatre.ticketPriceInCVG) / 1e6,
+                    price: Number(theatre.ticketPriceInCGV) / 1e6,
                     numberOfSaloons: theatre.movieSaloons.length
                 }
             })))
@@ -84,7 +84,7 @@ export default function cinema() {
             console.log(tId, sId, ticketAmount);
             const bought = userContract.ticketBuy(tId, sId, ticketAmount);
             await bought;
-            handleNewTransaction(`Transaction successful\n${ticketAmount} tickets has been bought at ${theatres[tId].name}`)
+            handleNewTransaction(`Transaction sent successfully to buy\n${ticketAmount} tickets at ${theatres[tId].name}`)
         } catch {
             handleRejectedransaction("Something went wrong during ticket buy process");
         }
@@ -110,7 +110,7 @@ export default function cinema() {
                             <div className={styles.box} key={item.id} style={{}}>
                                 <p className={styles.name}>{item.name}</p>
                                 <p className={styles.location}>{item.location}</p>
-                                <p>Ticket Price: {item.price} CVG</p>
+                                <p>Ticket Price: {item.price} CGV</p>
                                 <p>Total Saloons: {item.numberOfSaloons}</p>
                                 <Input
                                     id='ticketsInput'

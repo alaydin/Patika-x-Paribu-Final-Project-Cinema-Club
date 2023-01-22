@@ -2,43 +2,43 @@
 pragma solidity ^0.8.0;
 
 import "./1_ParibuNFT.sol";
-import "./2_CVGToken.sol";
+import "./2_CGVToken.sol";
 import "./3_Cinema.sol";
 
 // address constant USDC_ADDRESS = 0x07865c6E87B9F70255377e024ace6630C1Eaa37F; // Could be any 
 
 /// @title User side implementation of fiat currency deposit and ticket purchase
 /// @author Burak Alaydın
-/** @notice This contract allows users to mint CVG token in exchange for fiat currency at 1:1 rate
+/** @notice This contract allows users to mint CGV token in exchange for fiat currency at 1:1 rate
 *** Users can also buy tickets or refund their deposits
 **/
-/** @dev The contract does not hold CVG and mints it for the users instead of transfering
+/** @dev The contract does not hold CGV and mints it for the users instead of transfering
 *** It's to prevent cases when the contract becomes insolvent
-*** The contract makes calls to CVGToken and Cinema contracts
+*** The contract makes calls to CGVToken and Cinema contracts
 **/
 /// @custom:disclaimer This contract is made for learning purposes
 contract User is Ownable {
     ParibuNFT private nft;
-    CVGToken private token;
+    CGVToken private token;
     Cinema private cinema;
     ERC20 public fiat;
 
     uint private fiatBalance; 
-    uint private CVGBalance;
+    uint private CGVBalance;
     uint private ETHBalance;
 
     bool mutex = false;
 
     constructor(address _nft,address _token, address _fiat, address payable _cinema) {
         nft = ParibuNFT(_nft);
-        token = CVGToken(_token);
+        token = CGVToken(_token);
         fiat = ERC20(_fiat);
         cinema = Cinema(_cinema);
     }
 
     /// @dev The following set methods can be used in case the dependent contract address changes
     function setToken(address _token) public onlyOwner {
-        token = CVGToken(_token);
+        token = CGVToken(_token);
     }
 
     function setNft(address _nft) public onlyOwner {
@@ -72,7 +72,7 @@ contract User is Ownable {
     event deposited(address indexed caller, uint amount, uint indexed date);
     event refunded(address indexed caller, uint amount);
     event fiatWithdrawal(address indexed to, uint amount);
-    event CVGWithdrawal(address indexed to, uint amount);
+    event CGVWithdrawal(address indexed to, uint amount);
 
     function getUser(address user) external view returns (S_User memory) {
         return addressToUser[user];
@@ -86,8 +86,8 @@ contract User is Ownable {
         return ETHBalance;
     }
 
-    function getCVGBalance() public view returns (uint) {
-        return CVGBalance;
+    function getCGVBalance() public view returns (uint) {
+        return CGVBalance;
     }
 
     function _fiatTransfer(uint256 amount) internal {
@@ -104,9 +104,9 @@ contract User is Ownable {
         updatedUser.lastPurchaseDate = block.timestamp;
     }
 
-    /// @notice Transfers 10 fiat currency from user to the contract in return of CVG at 1:1 rate.
-    /// @dev The transfer amount is hardcoded instead of taken as parameter since the actual implementation of "CVG Para" works the same way.
-    function mint10CVG() external {
+    /// @notice Transfers 10 fiat currency from user to the contract in return of CGV at 1:1 rate.
+    /// @dev The transfer amount is hardcoded instead of taken as parameter since the actual implementation of "CGV Para" works the same way.
+    function mint10CGV() external {
         uint amount = 10 * (10**6);
         _fiatTransfer(amount);
         token.mintToken(msg.sender, amount);
@@ -114,8 +114,8 @@ contract User is Ownable {
         emit deposited(msg.sender, 10, block.timestamp);
     }
 
-    /// @notice Transfers 20 fiat currency from user to the contract in return of CVG at 1:1 rate.
-    function mint20CVG() external {
+    /// @notice Transfers 20 fiat currency from user to the contract in return of CGV at 1:1 rate.
+    function mint20CGV() external {
         uint amount = 20 * (10**6);
         _fiatTransfer(amount);
         token.mintToken(msg.sender, amount);
@@ -123,8 +123,8 @@ contract User is Ownable {
         emit deposited(msg.sender, 20, block.timestamp);
     }
 
-    /// @notice Transfers 30 fiat currency from user to the contract in return of CVG at 1:1 rate.
-    function mint30CVG() external {
+    /// @notice Transfers 30 fiat currency from user to the contract in return of CGV at 1:1 rate.
+    function mint30CGV() external {
         uint amount = 30 * (10**6);
         _fiatTransfer(amount);
         token.mintToken(msg.sender, amount);
@@ -161,7 +161,7 @@ contract User is Ownable {
     *** This contract acts as an escrow between Cinema contract and the user
     *** Mutex added (might be unnecessary)
     *** First, get total price for tickets
-    *** Then, transfer CVG from user to this contract
+    *** Then, transfer CGV from user to this contract
     *** Approve Cinema contract as spender
     *** Call Cinema.sellTicket()
     *** finally, unlock and make an internal call to change User(`msg.sender`)
@@ -182,11 +182,11 @@ contract User is Ownable {
         require(!mutex, "Locked");
         mutex = true;
 
-        // Transfer user CVGs to this contract
+        // Transfer user CGVs to this contract
         bool sent = token.transferFrom(msg.sender, address(this), totalPrice);
         require(sent, "There was a problem during escrow deposit process");
 
-        // Approve cinema contract as spender for CVG tokens
+        // Approve cinema contract as spender for CGV tokens
         bool approved = token.approve(address(cinema), totalPrice);
         require(approved, "Token approval failed");
 
@@ -204,8 +204,8 @@ contract User is Ownable {
     /** @dev I have seen the concerns about potential manipulation of block.timestamp by the miners.
     *** Users should not be able to request for refund if they spent tokens after their last purchase/mint.
     *** Before the transfer process, equalizes the last purchase date to 0 and decreases the user's inactive deposit amount.
-    *** Transfers CVG tokens from user to this contract
-    *** Increases CVG balance of the contract
+    *** Transfers CGV tokens from user to this contract
+    *** Increases CGV balance of the contract
     *** Sends fiat back to user
     **/
     function refund(uint amount) external returns (bool) {
@@ -224,9 +224,9 @@ contract User is Ownable {
         }
 
         bool sent = token.transferFrom(msg.sender, address(this), amount);
-        require(sent, "CVG transfer for refund process had some issues");
+        require(sent, "CGV transfer for refund process had some issues");
 
-        CVGBalance += amount;
+        CGVBalance += amount;
         fiatBalance -= amount;
 
         sent = fiat.transfer(msg.sender, amount);
@@ -250,17 +250,17 @@ contract User is Ownable {
         return true;
     }
 
-    /// @notice Withdraws the given amount from CVG balance of the contract to given address
+    /// @notice Withdraws the given amount from CGV balance of the contract to given address
     /// @dev Only the contract owner can withdraw. Could be improved by Access Control
-    function withdrawCVG(address to, uint amount) public onlyOwner returns (bool) {
-        require(amount <= CVGBalance, "Insufficient Balance");
+    function withdrawCGV(address to, uint amount) public onlyOwner returns (bool) {
+        require(amount <= CGVBalance, "Insufficient Balance");
 
-        CVGBalance -= amount;
+        CGVBalance -= amount;
 
         bool sent = token.transfer(to, amount);
-        require(sent, "Could not withdraw CVG");
+        require(sent, "Could not withdraw CGV");
 
-        emit CVGWithdrawal(to, amount);
+        emit CGVWithdrawal(to, amount);
         return true;
     }
 
