@@ -370,48 +370,6 @@ export default function management() {
                     />
                 </div>
             }
-            {/* <div>
-                <h2>Withdraw USDC in User Contract</h2>
-                <Widget
-                    className={styles.refundWidget}
-                    info={`${(usdc / 1e6).toString()} USDC`}
-                    title='Withdraw'
-                    style={{
-                        display: 'grid',
-                        backgroundColor: "transparent",
-                        border: 'none',
-                        // alignItems: 'center', justifyContent: 'center'
-                    }} >
-                    <Input
-                        label="Address"
-                        type="text"
-                        validation={{
-                            required: true
-                        }}
-                        onChange={(e) => setUsdcReceiver(e.target.value)}
-                        style={{ marginRight: '10px', borderRadius: '10px' }}
-                    />
-                    <Input
-                        label="Amount"
-                        type="number"
-                        validation={{
-                            numberMin: 0,
-                            required: true
-                        }}
-                        onChange={(e) => setUsdcInput(e.target.value)}
-                        style={{ marginRight: '10px', borderRadius: '10px' }}
-                    />
-                    <Button
-                        text='Withdraw'
-                        size="regular"
-                        isFullWidth={false}
-                        theme={'moneyPrimary'}
-                        style={{ padding: "1em", paddingTop: "0.5em", paddingBottom: "0.5em", marginTop: "1em" }}
-                        onClick={() => withdrawUSDC()}
-                    />
-                </Widget>
-
-            </div> */}
         </>
     )
 }
